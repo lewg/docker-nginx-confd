@@ -1,0 +1,18 @@
+etcd:
+  image: coreos/etcd
+  ports:
+    # Move ports to avoid issues with host coreos instance
+    - "4002:4002"
+    - "7002:7002"
+  environment:
+    ETCD_ADDR: 172.17.8.101:4002
+    ETCD_PEER_ADDR: 172.17.8.101:7002
+nginx:
+  build: .
+  ports:
+    - "80:80"
+  links:
+    - etcd
+  environment:
+    ETCD_HOST: 172.17.8.101
+    ETCD_PORT: 4002
