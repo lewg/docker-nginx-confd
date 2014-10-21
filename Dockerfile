@@ -15,6 +15,12 @@ RUN mkdir -p /etc/confd/templates
 ADD ./nginx/nginx.conf.tmpl /etc/confd/templates/nginx.conf.tmpl
 ADD ./nginx/nginx.toml /etc/confd/conf.d/nginx.toml
 
+# Nginx Default Site
+RUN mkdir -p /opt/default-site
+ADD ./nginx/404.html /opt/default-site/404.html
+ADD ./nginx/Jessup.jpg /opt/default-site/Jessup.jpg
+ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
 ADD ./run.sh /opt/run.sh
 RUN chmod +x /opt/run.sh
 
