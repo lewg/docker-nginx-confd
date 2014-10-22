@@ -12,8 +12,14 @@ RUN mkdir -p /etc/confd/conf.d
 RUN mkdir -p /etc/confd/templates
 
 # Add confd files
-ADD ./nginx/nginx.conf.tmpl /etc/confd/templates/nginx.conf.tmpl
-ADD ./nginx/nginx.toml /etc/confd/conf.d/nginx.toml
+ADD ./nginx/upstreams.conf.tmpl /etc/confd/templates/upstreams.conf.tmpl
+ADD ./nginx/upstreams.toml /etc/confd/conf.d/upstreams.toml
+
+ADD ./nginx/registry.conf.tmpl /etc/confd/templates/registry.conf.tmpl
+ADD ./nginx/registry.toml /etc/confd/conf.d/registry.toml
+
+ADD ./nginx/hosts.conf.tmpl /etc/confd/templates/hosts.conf.tmpl
+ADD ./nginx/hosts.toml /etc/confd/conf.d/hosts.toml
 
 # Nginx Default Site
 RUN mkdir -p /opt/default-site
@@ -23,6 +29,9 @@ ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 ADD ./run.sh /opt/run.sh
 RUN chmod +x /opt/run.sh
+
+ADD ./run-debug.sh /opt/run-debug.sh
+RUN chmod +x /opt/run-debug.sh
 
 # Copy the Supervisor Config
 ADD ./supervisord.conf /etc/supervisor/supervisord.conf

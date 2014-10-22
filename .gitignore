@@ -1,0 +1,4 @@
+# Don't want these getting checked in (unintentionally).
+/nginx-data/certs/*.pem
+/nginx-data/keys/*.pem
+/nginx-data/pw/*.htpasswd

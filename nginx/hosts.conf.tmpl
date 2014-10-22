@@ -1,13 +1,3 @@
-# Upstreams
-{{range $upstream := lsdir "/nginx/upstreams"}}
-  upstream {{base $upstream}} {
-  {{ $endpoints := printf "/nginx/upstreams/%s/endpoints/*" $upstream}}
-  {{range gets $endpoints}}
-    server {{.Value}};
-  {{end}}
-  }
-{{end}}
-
 # Hosts
 {{range $host := lsdir "/nginx/hosts"}}
 server {
