@@ -13,14 +13,8 @@ RUN mkdir -p /etc/confd/conf.d
 RUN mkdir -p /etc/confd/templates
 
 # Add confd files
-ADD ./nginx/upstreams.conf.tmpl /etc/confd/templates/upstreams.conf.tmpl
-ADD ./nginx/upstreams.toml /etc/confd/conf.d/upstreams.toml
-
-ADD ./nginx/registry.conf.tmpl /etc/confd/templates/registry.conf.tmpl
-ADD ./nginx/registry.toml /etc/confd/conf.d/registry.toml
-
-ADD ./nginx/hosts.conf.tmpl /etc/confd/templates/hosts.conf.tmpl
-ADD ./nginx/hosts.toml /etc/confd/conf.d/hosts.toml
+ADD ./nginx/proxy.conf.tmpl /etc/confd/templates/proxy.conf.tmpl
+ADD ./nginx/proxy.toml /etc/confd/conf.d/proxy.toml
 
 # Nginx Default Site
 RUN mkdir -p /opt/default-site
@@ -31,6 +25,7 @@ ADD ./nginx/default.conf /etc/nginx/conf.d/default.conf
 ADD ./run.sh /opt/run.sh
 RUN chmod +x /opt/run.sh
 
+# For running under fig
 ADD ./run-debug.sh /opt/run-debug.sh
 RUN chmod +x /opt/run-debug.sh
 

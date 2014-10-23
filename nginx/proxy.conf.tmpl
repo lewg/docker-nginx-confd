@@ -1,4 +1,39 @@
+#
+# Upstreams
+#
+{{range $upstream := lsdir "/nginx/upstreams"}}
+  upstream {{base $upstream}} {
+  {{ $endpoints := printf "/nginx/upstreams/%s/endpoints/*" $upstream}}
+  {{range gets $endpoints}}
+    server {{.Value}};
+  {{end}}
+  }
+{{end}}
+
+#
+# Hosts
+#
+{{range $host := lsdir "/nginx/hosts"}}
+server {
+  listen 80;
+  {{ $server := base $host }}
+  server_name {{$server}};
+
+  {{ $proxy_pass := printf "/nginx/hosts/%s/upstream" $server }}
+  location / {
+    proxy_pass http://{{getv $proxy_pass}};
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+{{end}}
+
+
+#
 # Registries
+#
 {{range $host := lsdir "/nginx/registries"}}
 {{ $server := base $host }}
 server {
