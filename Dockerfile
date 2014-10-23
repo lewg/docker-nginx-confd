@@ -1,9 +1,8 @@
 FROM nginx:1.7.6
 
-# Install curl and supervisor
-ENV DEBIAN_FRONTEND=noninteractive
-ENV SYSTEM_AT_LEAST=20141022
-RUN apt-get update -qq && apt-get install -y curl supervisor && apt-get clean
+# Update and install curl and supervisor
+ENV SYSTEM_AT_LEAST 20141022
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl supervisor && apt-get clean
 
 # Install confd
 ENV CONFD_VERSION 0.6.3
