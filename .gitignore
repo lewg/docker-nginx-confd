@@ -2,3 +2,4 @@
 /nginx-data/certs/*.pem
 /nginx-data/keys/*.pem
 /nginx-data/pw/*.htpasswd
+/conf.d
