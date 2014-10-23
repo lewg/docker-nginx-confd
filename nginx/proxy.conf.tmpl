@@ -37,6 +37,12 @@ server {
 {{range $host := lsdir "/nginx/registries"}}
 {{ $server := base $host }}
 server {
+  listen *:80;
+  server_name server_name {{ $server }};
+  return 301 https://$server_name$request_uri;
+}
+
+server {
   listen 443;
   server_name {{ $server }};
 
