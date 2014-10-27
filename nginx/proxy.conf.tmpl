@@ -38,7 +38,7 @@ server {
 {{ $server := base $host }}
 server {
   listen *:80;
-  server_name server_name {{ $server }};
+  server_name {{ $server }};
   return 301 https://$server_name$request_uri;
 }
 
