@@ -15,6 +15,7 @@ RUN mkdir -p /etc/confd/templates
 # Add confd files
 ADD ./nginx/proxy.conf.tmpl /etc/confd/templates/proxy.conf.tmpl
 ADD ./nginx/proxy.toml /etc/confd/conf.d/proxy.toml
+ADD ./nginx/debug.toml /etc/confd/conf.d/debug.toml
 
 # Nginx Default Site
 RUN mkdir -p /opt/default-site
