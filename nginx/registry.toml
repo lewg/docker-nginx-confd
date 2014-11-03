@@ -1,5 +1,5 @@
 [template]
-keys        = ["nginx/registry/htpasswd"]
+keys        = ["nginx/registry"]
 owner       = "root"
 mode        = "0400"
 src         = "registry.htpasswd.tmpl"

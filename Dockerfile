@@ -12,13 +12,6 @@ RUN chmod 0755 /usr/local/bin/confd
 RUN mkdir -p /etc/confd/conf.d
 RUN mkdir -p /etc/confd/templates
 
-# Add confd files
-ADD ./nginx/proxy.conf.tmpl /etc/confd/templates/proxy.conf.tmpl
-ADD ./nginx/proxy.toml /etc/confd/conf.d/proxy.toml
-ADD ./nginx/debug.toml /etc/confd/conf.d/debug.toml
-ADD ./nginx/registry-pw.toml /etc/confd/conf.d/registry-pw.toml
-ADD ./nginx/registry.htpasswd.tmpl /etc/confd/templates/registry.htpasswd.tmpl
-
 # Nginx Default Site
 RUN mkdir -p /opt/default-site
 ADD ./nginx/404.html /opt/default-site/404.html
@@ -34,6 +27,13 @@ RUN chmod +x /opt/run-debug.sh
 
 # Copy the Supervisor Config
 ADD ./supervisord.conf /etc/supervisor/supervisord.conf
+
+# Add confd files
+ADD ./nginx/proxy.conf.tmpl /etc/confd/templates/proxy.conf.tmpl
+ADD ./nginx/proxy.toml /etc/confd/conf.d/proxy.toml
+ADD ./nginx/debug.toml /etc/confd/conf.d/debug.toml
+ADD ./nginx/registry.toml /etc/confd/conf.d/registry.toml
+ADD ./nginx/registry.htpasswd.tmpl /etc/confd/templates/registry.htpasswd.tmpl
 
 # Run the boot script
 CMD /opt/run.sh
