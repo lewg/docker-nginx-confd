@@ -36,24 +36,14 @@ server {
 #
 {{range $host := lsdir "/nginx/registries"}}
 {{ $server := base $host }}
+{{ $upstream := printf "/nginx/registries/%s/upstream" $server }}
 server {
   listen *:80;
   server_name {{ $server }};
-  return 301 https://$server_name$request_uri;
-}
 
-server {
-  listen 443;
-  server_name {{ $server }};
-
-  {{ $cert_file := printf "/nginx/registries/%s/cert_file" $server }}
-  {{ $key_file := printf "/nginx/registries/%s/key_file" $server }}
-  {{ $pw_file := printf "/nginx/registries/%s/pw_file" $server }}
-  {{ $upstream := printf "/nginx/registries/%s/upstream" $server }}
-
-  ssl on;
-  ssl_certificate /nginx-data/certs/{{getv $cert_file}};
-  ssl_certificate_key /nginx-data/keys/{{getv $key_file}};
+  if ($http_x_forwarded_proto != "https") {
+    return 301 https://$server_name$request_uri;
+  }
 
   client_max_body_size 0; # disable any limits to avoid HTTP 413 for large image uploads
 
@@ -62,7 +52,7 @@ server {
 
   location / {
     auth_basic            "Restricted";
-    auth_basic_user_file  /nginx-data/pw/{{getv $pw_file}};
+    auth_basic_user_file  /etc/nginx/registry.htpasswd;
     proxy_pass                       http://{{getv $upstream }};
     proxy_set_header  Host           $http_host;   # required for docker client's sake
     proxy_set_header  X-Real-IP      $remote_addr; # pass on real client's IP
