@@ -7,8 +7,20 @@ etcd:
   environment:
     ETCD_ADDR: 172.17.8.101:4002
     ETCD_PEER_ADDR: 172.17.8.101:7002
-nginxdata:
-  build: nginx-data/.
+# nginxdata:
+#   build: nginx-data/.
+# Fake Backend
+backend:
+  build: backend/.
+  ports:
+    - "10080:80"
+nginxproxy:
+  build: nginx-proxy/.
+  links:
+    - nginx
+  ports:
+    - "8080:80"
+    - "8443:443"
 nginx:
   build: .
   ports:
@@ -16,11 +28,12 @@ nginx:
     - "443:443"
   links:
     - etcd
+    - backend
   environment:
     ETCD_HOST: 172.17.8.101
     ETCD_PORT: 4002
-  volumes_from:
-    - nginxdata
+  # volumes_from:
+  #   - nginxdata
   #volumes:
   #  - ./conf.d:/etc/nginx/conf.d
   command: /opt/run-debug.sh
