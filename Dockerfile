@@ -1,7 +1,7 @@
-FROM nginx:1.7.6
+FROM nginx:1.7.7
 
 # Update and install curl and supervisor
-ENV SYSTEM_AT_LEAST 20141022
+ENV SYSTEM_AT_LEAST 20141104
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl supervisor && apt-get clean
 
 # Install confd

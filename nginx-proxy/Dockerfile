@@ -1,4 +1,4 @@
-FROM nginx:1.7.6
+FROM nginx:1.7.7
 
 # Add keys
 ADD docker.local.crt /etc/nginx/docker.local.crt
