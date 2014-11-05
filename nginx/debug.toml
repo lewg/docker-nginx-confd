@@ -2,5 +2,5 @@
 keys        = [ "nginx/upstreams", "nginx/hosts", "nginx/registry"]
 owner       = "nginx"
 mode        = "0644"
-src         = "proxy.conf.tmpl"
+src         = "nginx.conf.tmpl"
 dest        = "/opt/default-site/proxy.txt"

@@ -29,8 +29,8 @@ RUN chmod +x /opt/run-debug.sh
 ADD ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Add confd files
-ADD ./nginx/proxy.conf.tmpl /etc/confd/templates/proxy.conf.tmpl
-ADD ./nginx/proxy.toml /etc/confd/conf.d/proxy.toml
+ADD ./nginx/nginx.conf.tmpl /etc/confd/templates/nginx.conf.tmpl
+ADD ./nginx/nginx.toml /etc/confd/conf.d/nginx.toml
 ADD ./nginx/debug.toml /etc/confd/conf.d/debug.toml
 ADD ./nginx/registry.toml /etc/confd/conf.d/registry.toml
 ADD ./nginx/registry.htpasswd.tmpl /etc/confd/templates/registry.htpasswd.tmpl
