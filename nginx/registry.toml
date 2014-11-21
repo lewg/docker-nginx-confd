@@ -1,6 +1,0 @@
-[template]
-keys        = ["nginx/registry"]
-owner       = "nginx"
-mode        = "0644"
-src         = "registry.htpasswd.tmpl"
-dest        = "/etc/nginx/registry.htpasswd"
