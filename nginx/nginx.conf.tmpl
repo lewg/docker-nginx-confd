@@ -28,34 +28,44 @@ http {
     #gzip  on;
 
     #
-    # Upstreams
+    # Registrator Endpoints
     #
-    {{range $upstream := lsdir "/nginx/upstreams"}}
-    upstream {{base $upstream}} { {{ $endpoints := printf "/nginx/upstreams/%s/endpoints/*" $upstream}}
-      {{range gets $endpoints}}server {{.Value}};
-      {{end}}
+    {{if lsdir "/services/" }}
+    {{range $service := lsdir "/services/"}}
+    upstream {{base $service}} { {{ $endpoint := printf "/services/%s/*" $service}}
+        {{range gets $endpoint}}server {{.Value}};
+        {{end}}
     }
+    {{end}}
     {{end}}
 
     #
     # Hosts
     #
-    {{range $host := lsdir "/nginx/hosts"}}
-    server {
-      listen 80;
-      {{ $server := base $host }}
-      server_name {{$server}};
 
-      {{ $proxy_pass := printf "/nginx/hosts/%s/upstream" $server }}
-      location / {
-        proxy_pass http://{{getv $proxy_pass}};
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      }
+    {{if lsdir "/nginx/hosts/"}}
+    {{range $host := lsdir "/nginx/hosts/"}}
+    server {
+        listen 80;
+        {{ $server := base $host }}
+        server_name {{$server}};
+
+        {{ $proxy_path := printf "/nginx/hosts/%s/upstream" $server }}# {{ $proxy_path }}
+        {{ $service_name := getv $proxy_path }}# {{ $service_name }}
+        {{ $service_path := printf "/services/%s/" $service_name }}# {{ $service_path }}
+        {{ if ls $service_path }}
+        location / {
+            proxy_pass http://{{$service_name}};
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        {{ end }}
     }
     {{end}}
+    {{end}}
+
 
     include /etc/nginx/conf.d/*.conf;
 }

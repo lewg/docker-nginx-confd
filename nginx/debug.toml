@@ -1,5 +1,5 @@
 [template]
-keys        = [ "nginx/upstreams", "nginx/hosts" ]
+keys        = [ "nginx", "services" ]
 owner       = "nginx"
 mode        = "0644"
 src         = "nginx.conf.tmpl"

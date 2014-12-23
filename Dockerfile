@@ -1,11 +1,11 @@
-FROM nginx:1.7.7
+FROM nginx:1.7.8
 
 # Update and install curl and supervisor
-ENV SYSTEM_AT_LEAST 20141104
+ENV SYSTEM_AT_LEAST 20141223
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl supervisor && apt-get clean
 
 # Install confd
-ENV CONFD_VERSION 0.6.3
+ENV CONFD_VERSION 0.7.1
 
 RUN curl -L https://github.com/kelseyhightower/confd/releases/download/v$CONFD_VERSION/confd-$CONFD_VERSION-linux-amd64 -o /usr/local/bin/confd
 RUN chmod 0755 /usr/local/bin/confd
