@@ -4,13 +4,17 @@ ETCD_HOST=172.17.8.101:4002
 # etcdctl --peers $ETCD_HOST set /nginx/upstreams/app2/endpoints/server1 backend_1
 
 #
-
+# Fake registrator endpoints
 etcdctl --peers $ETCD_HOST set /services/test/123:test1:80 backend_1
 etcdctl --peers $ETCD_HOST set /services/test/234:test1:80 backend_1
 
-etcdctl --peers $ETCD_HOST set /nginx/hosts/docker.local/upstream test
+etcdctl --peers $ETCD_HOST set /nginx/hosts/docker.local/upstream backend
 
 read -p "Base setup in place upstreams added... " -n1 -s
+
+etcdctl --peers $ETCD_HOST set /nginx/hosts/docker.local/ssl_only on
+
+read -p "Forced that host to ssl_only ... " -n1 -s
 
 etcdctl --peers $ETCD_HOST set /services/test2/123:test1:80 backend_1
 

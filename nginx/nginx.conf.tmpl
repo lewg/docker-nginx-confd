@@ -28,6 +28,11 @@ http {
 
     #gzip  on;
 
+    map $http_x_forwarded_proto $proxy_https {
+        default off;
+        https on;
+    }
+
     #
     # Registrator Endpoints
     #
@@ -52,6 +57,15 @@ http {
         server_name {{$server}};
 
         {{ $proxy_path := printf "/nginx/hosts/%s/upstream" $server }}# {{ $proxy_path }}
+        {{ $ssl_path := printf "/nginx/hosts/%s/ssl_only" $server }}# {{ $ssl_path }}
+        {{ if ls $ssl_path }}
+            {{ $ssl_only := getv $ssl_path }}
+            {{ if eq $ssl_only "on" }}
+                if ($https != "on") {
+                    rewrite ^   https://$server_name$request_uri? permanent;
+                }
+            {{ end }}
+        {{ end }}
         {{ $service_name := getv $proxy_path }}# {{ $service_name }}
         {{ $service_path := printf "/services/%s/" $service_name }}# {{ $service_path }}
         {{ if ls $service_path }}

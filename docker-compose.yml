@@ -1,0 +1,55 @@
+etcd:
+  image: quay.io/coreos/etcd:v2.2.1
+  ports:
+    # Move ports to avoid issues with host coreos instance
+    - "4002:4002"
+    - "7002:7002"
+    - "23790:23790"
+    - "23800:23800"
+  environment:
+    # https://coreos.com/etcd/docs/2.0.9/docker_guide.html
+    ETCD_NAME: etcd0
+    ETCD_ADVERTISE_CLIENT_URLS: http://172.17.8.101:23790
+    ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:23790,http://0.0.0.0:4002
+    ETCD_INITIAL_ADVERTISE_PEER_URLS: http://172.17.8.101:23800
+    ETCD_LISTEN_PEER_URLS: http://0.0.0.0:23800
+    ETCD_INITIAL_CLUSTER_TOKEN: etcd-cluster-1
+    ETCD_INITIAL_CLUSTER: etcd0=http://172.17.8.101:23800
+    ETCD_INITIAL_CLUSTER_STATE: new
+# registrator:
+  # image: gliderlabs/registrator:latest
+  # volumes:
+    # - /var/run/docker.sock:/tmp/docker.sock
+  # entrypoint:
+    # - /bin/registrator
+    # - etcd://etcd:4002/services
+  # links:
+    # - etcd
+# Fake Backend
+backend:
+  build: backend/.
+  ports:
+    - "10080:80"
+nginxproxy:
+  build: nginx-proxy/.
+  links:
+    - nginx
+  ports:
+    - "8080:80"
+    - "8443:443"
+nginx:
+  build: .
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - etcd
+    - backend
+  environment:
+    ETCD_HOST: 172.17.8.101
+    ETCD_PORT: 4002
+  # volumes_from:
+  #   - nginxdata
+  #volumes:
+  #  - ./conf.d:/etc/nginx/conf.d
+  command: bash /opt/run-debug.sh

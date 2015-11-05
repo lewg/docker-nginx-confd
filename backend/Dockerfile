@@ -1,3 +1,3 @@
-FROM nginx:1.7.7
+FROM nginx:1.9.6
 
-ADD index.html /usr/share/nginx/html/index.html
+ADD index.html /var/www/index.html
