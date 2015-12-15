@@ -15,15 +15,6 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    # Fix the IP for some common scenarios:
-    real_ip_header X-Forwarded-For;
-    real_ip_recursive on;
-
-    # Behind internal LB or ELB
-    set_real_ip_from 10.0.0.0/8;
-    set_real_ip_from 172.16.0.0/12;
-    set_real_ip_from 192.168.0.0/16;
-
     log_format json_log '{'
       # $arg_*
       # $args
@@ -46,7 +37,7 @@ http {
       '"http_x_forwarded_for":"$http_x_forwarded_for",'
       '"http_x_forwarded_proto":"$http_x_forwarded_proto",'
       # $http_*
-      '"https":"$https",'
+      # $https'
       # $is_args
       # $limit_rate
       '"msec":"$msec",'
@@ -93,11 +84,6 @@ http {
 
     #gzip  on;
 
-    map $http_x_forwarded_proto $proxy_https {
-        default off;
-        https on;
-    }
-
     #
     # Registrator Endpoints
     #
@@ -140,6 +126,7 @@ http {
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
         }
         {{ end }}
     }
