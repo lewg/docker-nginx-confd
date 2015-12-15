@@ -53,3 +53,9 @@ nginx:
   #volumes:
   #  - ./conf.d:/etc/nginx/conf.d
   command: bash /opt/run-debug.sh
+  log_driver: "gelf"
+  log_opt:
+    gelf-address: udp://docker.local:12201
+    tag: nginx
+  extra_hosts:
+    logstash: 172.17.8.101
