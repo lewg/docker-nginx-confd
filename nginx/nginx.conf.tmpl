@@ -16,7 +16,7 @@ http {
     default_type  application/octet-stream;
 
     # Fix the IP for some common scenarios:
-    real_ip_header proxy_protocol;
+    real_ip_header X-Forwarded-For;
     real_ip_recursive on;
 
     # Behind internal LB or ELB
@@ -52,7 +52,7 @@ http {
       # $nginx_version
       # $pid
       # $pipe
-      '"proxy_protocol_addr":"$proxy_protocol_addr",'
+      # $proxy_protocol_addr
       '"query_string":"$query_string",'
       # $realpath_root
       '"remote_addr":"$remote_addr",'
