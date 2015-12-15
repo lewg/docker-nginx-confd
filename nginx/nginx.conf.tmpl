@@ -83,7 +83,7 @@ http {
       '"uri":"$uri"'
     '}';
 
-    access_log  syslog:server=logstash:12204,facility=local1,tag=nginx_proxy,severity=info json_log;
+    access_log  syslog:server=logstash.kw.services:12204,facility=local1,tag=nginx_proxy,severity=info json_log;
 
     sendfile        on;
     #tcp_nopush     on;

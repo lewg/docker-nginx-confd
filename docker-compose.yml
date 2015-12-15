@@ -58,4 +58,4 @@ nginx:
     gelf-address: udp://docker.local:12201
     tag: nginx
   extra_hosts:
-    logstash: 172.17.8.101
+    logstash.kw.services: 172.17.8.101
