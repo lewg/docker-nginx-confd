@@ -35,16 +35,16 @@ nginxproxy:
   links:
     - nginx
   ports:
-    - "8080:80"
-    - "8443:443"
+    - "80:80"
+    - "443:443"
 nginx:
   build: .
   ports:
-    - "80:80"
-    - "443:443"
+    - "8080:80"
   links:
     - etcd
     - backend
+    - logstash:logstash.kw.services
   environment:
     ETCD_HOST: 172.17.8.101
     ETCD_PORT: 4002
@@ -53,9 +53,9 @@ nginx:
   #volumes:
   #  - ./conf.d:/etc/nginx/conf.d
   command: bash /opt/run-debug.sh
-  log_driver: "gelf"
-  log_opt:
-    gelf-address: udp://docker.local:12201
-    tag: nginx
-  extra_hosts:
-    logstash.kw.services: 172.17.8.101
+logstash:
+  image: logstash:2.1.1
+  command: logstash -e 'input { syslog { port => 12204 } } filter { if [program] == "nginx_proxy" { json { source => "message" add_tag => ['nginx_access', 'nginx_proxy'] } } } output { stdout { codec => rubydebug } }'
+  ports:
+    - 12202
+    - 12202/udp

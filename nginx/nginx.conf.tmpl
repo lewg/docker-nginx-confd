@@ -102,31 +102,45 @@ http {
 
     {{if lsdir "/nginx/hosts/"}}
     {{range $host := lsdir "/nginx/hosts/"}}
-    server {
+      server {
         listen 80;
         {{ $server := base $host }}
         server_name {{$server}};
 
-        {{ $proxy_path := printf "/nginx/hosts/%s/upstream" $server }}# {{ $proxy_path }}
-        {{ $ssl_path := printf "/nginx/hosts/%s/ssl_only" $server }}# {{ $ssl_path }}
+        {{ $proxy_path := printf "/nginx/hosts/%s/upstream" $server }}# $proxy_path: {{ $proxy_path }}
+        {{ $ssl_path := printf "/nginx/hosts/%s/ssl_only" $server }}# $ssl_path: {{ $ssl_path }}
+        {{ $secured_path := printf "/nginx/hosts/%s/secured" $server }}# $secured_path: {{ $secured_path }}
+
         {{ if ls $ssl_path }}
-            {{ $ssl_only := getv $ssl_path }}
-            {{ if eq $ssl_only "on" }}
-                if ($http_x_forwarded_proto != "https") {
-                    rewrite ^   https://$server_name$request_uri? permanent;
-                }
-            {{ end }}
+          {{ $ssl_only := getv $ssl_path }}
+          {{ if eq $ssl_only "on" }}
+            if ($http_x_forwarded_proto != "https") {
+              rewrite ^ https://$server_name$request_uri? permanent;
+            }
+          {{ end }}
         {{ end }}
-        {{ $service_name := getv $proxy_path }}# {{ $service_name }}
-        {{ $service_path := printf "/services/%s/" $service_name }}# {{ $service_path }}
+
+
+        {{ $service_name := getv $proxy_path }}# $service name: {{ $service_name }}
+        {{ $service_path := printf "/services/%s/" $service_name }}# $service_path: {{ $service_path }}
         {{ if ls $service_path }}
         location / {
-            proxy_pass http://{{$service_name}};
-            proxy_redirect off;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+          proxy_pass http://{{$service_name}};
+          proxy_redirect off;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+
+          {{ if ls $secured_path }}
+            {{ $secured := getv $secured_path }}
+            # $secured: {{ $secured }}
+            {{ if eq $secured "on" }}
+              auth_basic            "Secured";
+              auth_basic_user_file  /etc/nginx/secure.htpasswd;
+            {{ end }}
+          {{ end }}
+
         }
         {{ end }}
     }

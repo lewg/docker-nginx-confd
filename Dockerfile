@@ -30,8 +30,10 @@ ADD ./supervisord.conf /etc/supervisor/supervisord.conf
 
 # Add confd files
 ADD ./nginx/nginx.conf.tmpl /etc/confd/templates/nginx.conf.tmpl
+ADD ./nginx/secure.htpasswd.tmpl /etc/confd/templates/secure.htpasswd.tmpl
 ADD ./nginx/nginx.toml /etc/confd/conf.d/nginx.toml
 ADD ./nginx/debug.toml /etc/confd/conf.d/debug.toml
+ADD ./nginx/secured.toml /etc/confd/conf.d/secured.toml
 
 # Run the boot script
 CMD /opt/run.sh

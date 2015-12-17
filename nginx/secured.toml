@@ -1,0 +1,6 @@
+[template]
+keys        = ["nginx"]
+owner       = "nginx"
+mode        = "0644"
+src         = "secure.htpasswd.tmpl"
+dest        = "/etc/nginx/secure.htpasswd"
