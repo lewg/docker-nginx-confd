@@ -112,7 +112,7 @@ http {
         {{ if ls $ssl_path }}
             {{ $ssl_only := getv $ssl_path }}
             {{ if eq $ssl_only "on" }}
-                if ($https != "on") {
+                if ($http_x_forwarded_proto != "https") {
                     rewrite ^   https://$server_name$request_uri? permanent;
                 }
             {{ end }}
