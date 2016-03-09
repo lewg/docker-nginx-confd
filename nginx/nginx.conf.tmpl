@@ -15,68 +15,6 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    log_format json_log '{'
-      # $arg_*
-      # $args
-      # $binary_remote_addr
-      '"body_bytes_sent":"$body_bytes_sent",'
-      '"bytes_sent":"$bytes_sent",'
-      '"connection":"$connection",'
-      # $connection_requests
-      # $content_length
-      # $content_type
-      # $cookie_*
-      # $document_root
-      # $document_uri
-      '"host":"$host",'
-      '"hostname":"$hostname",'
-      '"http_cookie":"$http_cookie",'
-      '"http_dnt":"$http_dnt",'
-      '"http_referer":"$http_referer",'
-      '"http_user_agent":"$http_user_agent",'
-      '"http_x_forwarded_for":"$http_x_forwarded_for",'
-      '"http_x_forwarded_proto":"$http_x_forwarded_proto",'
-      # $http_*
-      # $https'
-      # $is_args
-      # $limit_rate
-      '"msec":"$msec",'
-      # $nginx_version
-      # $pid
-      # $pipe
-      # $proxy_protocol_addr
-      '"query_string":"$query_string",'
-      # $realpath_root
-      '"remote_addr":"$remote_addr",'
-      # $remote_port
-      # $remote_user
-      '"request":"$request",'
-      # $request_body
-      # $request_body_file
-      # $request_completion
-      # $request_filename
-      # $request_length
-      '"request_method":"$request_method",'
-      '"request_time":"$request_time",'
-      # $request_uri
-      # $scheme
-      # $sent_http_*
-      # $server_addr
-      '"server_name":"$server_name",'
-      '"server_port":"$server_port",'
-      '"server_protocol":"$server_protocol",'
-      '"status":"$status",'
-      # $tcpinfo_rtt
-      # $tcpinfo_rttvar
-      # $tcpinfo_snd_cwnd
-      # $tcpinfo_rcv_space
-      '"time_iso8601":"$time_iso8601",'
-      '"time_local":"$time_local",'
-      '"uri":"$uri"'
-    '}';
-
-    access_log  syslog:server=logstash.kw.services:12204,facility=local1,tag=nginx_proxy,severity=info json_log;
-
     sendfile        on;
     #tcp_nopush     on;
 
